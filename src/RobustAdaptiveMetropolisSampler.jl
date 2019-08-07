@@ -48,7 +48,7 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractPDMat, 
 
     stats_accepted_values = 0
 
-    progress_meter = show_progress ? Progress(n) : nothing
+    progress_meter = Progress(n, show_progress ? 0.1 : Inf)
 
     # This is a pre-allocated vector used in the loop
     scaled_proposal_vector = Vector{Float64}(undef, d)
@@ -83,7 +83,7 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractPDMat, 
 
         output_chain[i, :] .= x
 
-        progress_meter!==nothing && next!(progress_meter; showvalues = [(:acceptance_rate,stats_accepted_values/i)])
+        next!(progress_meter; showvalues = [(:acceptance_rate,stats_accepted_values/i)])
     end
 
     return (chain=output_chain, acceptance_rate=stats_accepted_values/n, S=s.L)
