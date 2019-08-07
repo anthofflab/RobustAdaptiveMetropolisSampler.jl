@@ -5,8 +5,9 @@ using LinearAlgebra, Random, Distributions, PDMats, ProgressMeter
 export RAM_sample
 
 # TODO This should be removed once the PR in PDMats with this is merged
-LinearAlgebra.cholesky(a::PDiagMat) = cholesky(Diagonal(a.diag))
-LinearAlgebra.cholesky(a::ScalMat) = cholesky(Diagonal(fill(a.value, a.dim)))
+our_cholesky(a::PDiagMat) = cholesky(Diagonal(a.diag))
+our_cholesky(a::ScalMat) = cholesky(Diagonal(fill(a.value, a.dim)))
+our_cholesky(a::PDMat) = copy(a.chol)
 
 # The following methods cover different ways to pass in a co-variance matrix
 function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::Matrix{<:Real}, n::Int; kwargs...)
@@ -34,7 +35,7 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractPDMat, 
     0.5 < γ <= 1 || error("γ must be between 0.5 and 1.")
 
     x = copy(x0)
-    s = cholesky(s0)
+    s = our_cholesky(s0)
 
     d = length(x0)
 
