@@ -1,0 +1,1 @@
+By contributing code to RobustAdaptiveMetropolisSampler.jl, you are agreeing to release it under the [MIT License](https://github.com/anthofflab/RobustAdaptiveMetropolisSampler.jl/blob/master/LICENSE.md).
