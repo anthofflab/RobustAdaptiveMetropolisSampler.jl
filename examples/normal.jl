@@ -1,4 +1,4 @@
-using MCMCRAMSampler, Distributions, LinearAlgebra, VegaLite, DataFrames
+using RobustAdaptiveMetropolisSampler, Distributions, LinearAlgebra, VegaLite, DataFrames
 
 d = Normal(3., 2)
 
