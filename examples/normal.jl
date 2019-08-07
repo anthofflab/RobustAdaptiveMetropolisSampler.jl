@@ -8,7 +8,7 @@ function logp(p)
     return logpdf(model1, p[1])
 end
 
-chain = MCMCRAMSampler.sample(logp, [0., 0.1], Diagonal([0.5, 0.5]), 100_000)
+chain, accrate, S = MCMCRAMSampler.sample(logp, [0., 0.1], Diagonal([0.5, 0.5]), 100_000)
 
 df = DataFrame(p1 = chain[10_000:10:end,1])
 
