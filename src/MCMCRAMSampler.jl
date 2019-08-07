@@ -19,6 +19,8 @@ function sample(logtarget, x0::AbstractVector{<:Number}, s0, n::Int; opt_α=0.23
 
     output_chain = Matrix{Float64}(undef, n, par_count)
 
+    stats_accepted_values = 0
+
     for i in 1:n
         # Step R1
         randn!(u)
@@ -30,6 +32,7 @@ function sample(logtarget, x0::AbstractVector{<:Number}, s0, n::Int; opt_α=0.23
         α = min(1, exp(log_probability_y - log_probability_x))
 
         if α > rand()
+            stats_accepted_values += 1
             x, y = y, x
         end
 
@@ -44,7 +47,7 @@ function sample(logtarget, x0::AbstractVector{<:Number}, s0, n::Int; opt_α=0.23
         output_chain[i, :] .= x
     end
 
-    return output_chain
+    return (chain=output_chain, acceptance_rate=stats_accepted_values/n, S=s.L)
 end
 
 end
