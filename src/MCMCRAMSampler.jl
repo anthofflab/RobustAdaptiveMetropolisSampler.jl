@@ -1,8 +1,8 @@
 module MCMCRAMSampler
 
-using LinearAlgebra, Random
+using LinearAlgebra, Random, Distributions
 
-function sample(logtarget, x0::AbstractVector{<:Number}, s0, n::Int; opt_α=0.234, γ=0.75)
+function sample(logtarget, x0::AbstractVector{<:Number}, s0, n::Int; opt_α=0.234, γ=2/3, q=Normal())
     n > 0 || error("n must be larger than 0.")
     0 < opt_α < 1 || error("opt_α must be between 0 and 1.")
     0.5 < γ <= 1 || error("γ must be between 0.5 and 1.")
@@ -23,7 +23,7 @@ function sample(logtarget, x0::AbstractVector{<:Number}, s0, n::Int; opt_α=0.23
 
     for i in 1:n
         # Step R1
-        randn!(u)
+        rand!(q, u)
         y[:] .= x .+ s.L * u
 
         # Step R2
