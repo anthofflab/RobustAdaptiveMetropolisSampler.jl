@@ -49,10 +49,14 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractPDMat, 
 
     progress_meter = show_progress ? Progress(n) : nothing
 
+    # This is a pre-allocated vector used in the loop
+    scaled_proposal_vector = Vector{Float64}(undef, d)
+
     for i in 1:n
         # Step R1
         rand!(q, u)
-        y[:] .= x .+ s.L * u
+        
+        y[:] .= x .+ mul!(scaled_proposal_vector, s.L, u)
 
         # Step R2
         log_probability_y = logtarget(y)
