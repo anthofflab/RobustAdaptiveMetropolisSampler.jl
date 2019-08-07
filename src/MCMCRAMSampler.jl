@@ -2,7 +2,12 @@ module MCMCRAMSampler
 
 using LinearAlgebra, Random
 
-function sample(logtarget, x0, s0, n; opt_α=0.234, γ=0.75)
+function sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractVector{<:Number}, n::Int; opt_α=0.234, γ=0.75)
+    length(x0) == length(s0) || error("x0 and s0 must have the same length.")
+    n > 0 || error("n must be larger than 0.")
+    0 < opt_α < 1 || error("opt_α must be between 0 and 1.")
+    0.5 < γ <= 1 || error("γ must be between 0.5 and 1.")
+
     x = copy(x0)
     s = cholesky(s0) # Probably wrong
 
