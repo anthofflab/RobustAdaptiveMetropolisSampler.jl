@@ -38,6 +38,8 @@ function sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractVector{<:Nu
 
         η = i^-γ
         M = s.L * (I + η * (α-opt_α) * (u * u') / norm(u)^2 ) * s.L'
+        # The paper has a proof that M is symmetric, so we declare that fact
+        # to work around numerical rounding errors
         s = cholesky(Symmetric(M))
 
         output_chain[i, :] .= x
