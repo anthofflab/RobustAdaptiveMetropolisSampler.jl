@@ -2,7 +2,7 @@ module MCMCRAMSampler
 
 using LinearAlgebra, Random
 
-function sample(logtarget, x0, s0, n; opt_α=0.234)
+function sample(logtarget, x0, s0, n; opt_α=0.234, γ=0.75)
     x = copy(x0)
     s = cholesky(s0) # Probably wrong
 
@@ -29,16 +29,11 @@ function sample(logtarget, x0, s0, n; opt_α=0.234)
             x, y = y, x
         end
 
-        η = min(1.0, par_count/i^0.75)
+        # Step R3
 
-        our_I = Matrix{Float64}(I, par_count, par_count)
-
-        M = s.L * (our_I + η * (α-opt_α) * (u * u') / norm(u)^2 ) * s.L'
-
-        try
-            s = cholesky(M)
-        catch err
-        end
+        η = i^-γ
+        M = s.L * (I + η * (α-opt_α) * (u * u') / norm(u)^2 ) * s.L'
+        s = cholesky(Symmetric(M))
 
         output_chain[i, :] .= x
     end
