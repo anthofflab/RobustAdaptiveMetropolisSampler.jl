@@ -1,6 +1,6 @@
 module RobustAdaptiveMetropolisSampler
 
-using LinearAlgebra, Random, Distributions, PDMats
+using LinearAlgebra, Random, Distributions, PDMats, ProgressMeter
 
 export RAM_sample
 
@@ -27,7 +27,7 @@ end
 
 # Actual sampling code
 
-function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractPDMat, n::Int; opt_α=0.234, γ=2/3, q=Normal())
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractPDMat, n::Int; opt_α=0.234, γ=2/3, q=Normal(), show_progress::Bool=true)
     length(x0) == size(s0, 1) || error("Covariance matrix s0 must match size of x0.")
     n > 0 || error("n must be larger than 0.")
     0 < opt_α < 1 || error("opt_α must be between 0 and 1.")
@@ -46,6 +46,8 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractPDMat, 
     output_chain = Matrix{Float64}(undef, n, d)
 
     stats_accepted_values = 0
+
+    progress_meter = show_progress ? Progress(n) : nothing
 
     for i in 1:n
         # Step R1
@@ -75,6 +77,8 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractPDMat, 
         s = cholesky(Symmetric(M))
 
         output_chain[i, :] .= x
+
+        progress_meter!==nothing && next!(progress_meter; showvalues = [(:acceptance_rate,stats_accepted_values/i)])
     end
 
     return (chain=output_chain, acceptance_rate=stats_accepted_values/n, S=s.L)
