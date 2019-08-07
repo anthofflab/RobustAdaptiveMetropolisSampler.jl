@@ -8,8 +8,8 @@ function logp(p)
     return logpdf(model1, p[1])
 end
 
-chain, accrate, S = RAM_sample(logp, [0., 0.1], [0.5, 0.5], 100_000, q = TDist(1))
+chain, accrate, S = RAM_sample(logp, [0., 0.1], 0.5, 100_000, q = TDist(1))
 
-df = DataFrame(p1 = chain[10_000:10:end,1])
+df = DataFrame(p1 = chain[:,1])
 
 df |> @vlplot(:bar, x={:p1, bin=true}, y="count()")
