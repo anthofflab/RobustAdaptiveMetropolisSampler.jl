@@ -38,7 +38,9 @@ function sample(logtarget, x0::AbstractVector{<:Number}, s0, n::Int; opt_α=0.23
 
         # Step R3
 
-        η = i^-γ
+        # This is taken from the second paragraph of section 5
+        η = min(1, d * i^-γ)
+
         M = s.L * (I + η * (α-opt_α) * (u * u') / norm(u)^2 ) * s.L'
         # The paper has a proof that M is symmetric, so we declare that fact
         # to work around numerical rounding errors
