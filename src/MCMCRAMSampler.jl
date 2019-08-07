@@ -10,14 +10,14 @@ function sample(logtarget, x0::AbstractVector{<:Number}, s0, n::Int; opt_α=0.23
     x = copy(x0)
     s = cholesky(s0) # Probably wrong
 
-    par_count = length(x0)
+    d = length(x0)
 
-    u = zeros(par_count)
-    y = zeros(par_count)
+    u = zeros(d)
+    y = zeros(d)
 
     log_probability_x = logtarget(x0)
 
-    output_chain = Matrix{Float64}(undef, n, par_count)
+    output_chain = Matrix{Float64}(undef, n, d)
 
     stats_accepted_values = 0
 
