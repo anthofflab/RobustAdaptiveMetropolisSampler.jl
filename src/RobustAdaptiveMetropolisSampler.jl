@@ -1,4 +1,4 @@
-module MCMCRAMSampler
+module RobustAdaptiveMetropolisSampler
 
 using LinearAlgebra, Random, Distributions, PDMats
 
