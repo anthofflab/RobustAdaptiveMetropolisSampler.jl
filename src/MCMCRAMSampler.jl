@@ -1,14 +1,34 @@
 module MCMCRAMSampler
 
-using LinearAlgebra, Random, Distributions
+using LinearAlgebra, Random, Distributions, PDMats
 
-function sample(logtarget, x0::AbstractVector{<:Number}, s0, n::Int; opt_α=0.234, γ=2/3, q=Normal())
+export RAM_sample
+
+LinearAlgebra.cholesky(a::PDiagMat) = cholesky(Diagonal(a.diag))
+
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::Matrix{<:Real}, n::Int; kwargs...)
+    return RAM_sample(logtarget, x0, PDMat(s0), n; kwargs...)
+end
+
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::Vector{<:Real}, n::Int; kwargs...)
+    return RAM_sample(logtarget, x0, PDiagMat(abs2.(s0)), n; kwargs...)
+end
+
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::Diagonal{<:Real}, n::Int; kwargs...)
+    return RAM_sample(logtarget, x0, PDiagMat(diag(s0)), n; kwargs...)
+end
+
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::Real, n::Int; kwargs...)
+    return RAM_sample(logtarget, x0, ScalMat(length(x0), n, abs2(s0)); kwargs...)
+end
+
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractPDMat{<:Real}, n::Int; opt_α=0.234, γ=2/3, q=Normal())
     n > 0 || error("n must be larger than 0.")
     0 < opt_α < 1 || error("opt_α must be between 0 and 1.")
     0.5 < γ <= 1 || error("γ must be between 0.5 and 1.")
 
     x = copy(x0)
-    s = cholesky(s0) # Probably wrong
+    s = cholesky(s0)
 
     d = length(x0)
 
