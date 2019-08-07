@@ -8,6 +8,7 @@ export RAM_sample
 LinearAlgebra.cholesky(a::PDiagMat) = cholesky(Diagonal(a.diag))
 LinearAlgebra.cholesky(a::ScalMat) = cholesky(Diagonal(fill(a.value, a.dim)))
 
+# The following methods cover different ways to pass in a co-variance matrix
 function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::Matrix{<:Real}, n::Int; kwargs...)
     return RAM_sample(logtarget, x0, PDMat(s0), n; kwargs...)
 end
@@ -24,7 +25,10 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::Real, n::Int; k
     return RAM_sample(logtarget, x0, ScalMat(length(x0), abs2(s0)), n; kwargs...)
 end
 
+# Actual sampling code
+
 function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractPDMat, n::Int; opt_α=0.234, γ=2/3, q=Normal())
+    length(x0) == size(s0, 1) || error("Covariance matrix s0 must match size of x0.")
     n > 0 || error("n must be larger than 0.")
     0 < opt_α < 1 || error("opt_α must be between 0 and 1.")
     0.5 < γ <= 1 || error("γ must be between 0.5 and 1.")
@@ -63,7 +67,9 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractPDMat, 
         # This is taken from the second paragraph of section 5
         η = min(1, d * i^-γ)
 
+        # Compute the new covariance matrix
         M = s.L * (I + η * (α-opt_α) * (u * u') / norm(u)^2 ) * s.L'
+
         # The paper has a proof that M is symmetric, so we declare that fact
         # to work around numerical rounding errors
         s = cholesky(Symmetric(M))
