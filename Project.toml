@@ -1,4 +1,4 @@
-name = "MCMCRAMSampler"
+name = "RobustAdaptiveMetropolisSampler"
 uuid = "2f96e190-b8a6-11e9-0b3d-5fbd22c21613"
 version = "0.1.0-DEV"
 
