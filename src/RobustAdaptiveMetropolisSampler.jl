@@ -5,32 +5,32 @@ using LinearAlgebra, Random, Distributions, PDMats, ProgressMeter
 export RAM_sample
 
 # The following methods cover different ways to pass in a co-variance matrix
-function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractMatrix{<:Real}, n::Int; kwargs...)
-    return RAM_sample(logtarget, x0, PDMat(s0), n; kwargs...)
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractMatrix{<:Real}, n::Int; kwargs...)
+    return RAM_sample(logtarget, x0, PDMat(M0), n; kwargs...)
 end
 
-function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractVector{<:Real}, n::Int; kwargs...)
-    return RAM_sample(logtarget, x0, PDiagMat(abs2.(s0)), n; kwargs...)
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractVector{<:Real}, n::Int; kwargs...)
+    return RAM_sample(logtarget, x0, PDiagMat(abs2.(M0)), n; kwargs...)
 end
 
-function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::Diagonal{<:Real}, n::Int; kwargs...)
-    return RAM_sample(logtarget, x0, PDiagMat(diag(s0)), n; kwargs...)
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::Diagonal{<:Real}, n::Int; kwargs...)
+    return RAM_sample(logtarget, x0, PDiagMat(diag(M0)), n; kwargs...)
 end
 
-function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::Real, n::Int; kwargs...)
-    return RAM_sample(logtarget, x0, ScalMat(length(x0), abs2(s0)), n; kwargs...)
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::Real, n::Int; kwargs...)
+    return RAM_sample(logtarget, x0, ScalMat(length(x0), abs2(M0)), n; kwargs...)
 end
 
 # Actual sampling code
 
-function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractPDMat, n::Int; opt_α=0.234, γ=2/3, q=Normal(), show_progress::Bool=true)
-    length(x0) == size(s0, 1) || error("Covariance matrix s0 must match size of x0.")
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractPDMat, n::Int; opt_α=0.234, γ=2/3, q=Normal(), show_progress::Bool=true)
+    length(x0) == size(M0, 1) || error("Covariance matrix M0 must match size of x0.")
     n > 0 || error("n must be larger than 0.")
     0 < opt_α < 1 || error("opt_α must be between 0 and 1.")
     0.5 < γ <= 1 || error("γ must be between 0.5 and 1.")
 
     x = copy(x0)
-    s = cholesky(s0)
+    s = cholesky(M0)
 
     d = length(x0)
 
@@ -81,7 +81,7 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractPDMat, 
         next!(progress_meter; showvalues = [(:acceptance_rate,stats_accepted_values/i)])
     end
 
-    return (chain=output_chain, acceptance_rate=stats_accepted_values/n, S=s.L)
+    return (chain=output_chain, acceptance_rate=stats_accepted_values/n, M=s.L * S.L')
 end
 
 end
