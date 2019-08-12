@@ -41,8 +41,8 @@ using Distributions, RobustAdaptiveMetropolisSampler
 
 chain, accrate, S = RAM_sample(
     p -> logpdf(Normal(3., 2), p[1]), # log target function
-    [0.],                             # Initial values
-    0.5,                              # Scaling factor
+    [0.],                             # Initial value
+    0.5,                              # Use an isotropic covariance matrix with diagonal elements abs2(0.5)
     100_000                           # Number of runs
 )
 ```
