@@ -1,6 +1,6 @@
 name = "RobustAdaptiveMetropolisSampler"
 uuid = "2f96e190-b8a6-11e9-0b3d-5fbd22c21613"
-version = "0.2.0"
+version = "0.2.1-DEV"
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
