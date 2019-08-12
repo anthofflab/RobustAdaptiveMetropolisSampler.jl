@@ -10,11 +10,11 @@ our_cholesky(a::ScalMat) = cholesky(Diagonal(fill(a.value, a.dim)))
 our_cholesky(a::PDMat) = copy(a.chol)
 
 # The following methods cover different ways to pass in a co-variance matrix
-function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::Matrix{<:Real}, n::Int; kwargs...)
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractMatrix{<:Real}, n::Int; kwargs...)
     return RAM_sample(logtarget, x0, PDMat(s0), n; kwargs...)
 end
 
-function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::Vector{<:Real}, n::Int; kwargs...)
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, s0::AbstractVector{<:Real}, n::Int; kwargs...)
     return RAM_sample(logtarget, x0, PDiagMat(abs2.(s0)), n; kwargs...)
 end
 
