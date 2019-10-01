@@ -79,7 +79,7 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractPDMat, 
 
         output_chain[i, :] .= x
 
-        next!(progress_meter; showvalues = [(:acceptance_rate,stats_accepted_values/i)])
+        next!(progress_meter; showvalues = [(:acceptance_rate,stats_accepted_values/i), (:α, α)])
     end
 
     return (chain=output_chain, acceptance_rate=stats_accepted_values/n, M=s.L * s.L')
