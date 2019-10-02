@@ -2,9 +2,12 @@ using RobustAdaptiveMetropolisSampler
 using Distributions
 using Statistics
 using LinearAlgebra
+using Random
 using Test
 
 @testset "RobustAdaptiveMetropolisSampler" begin
+
+Random.seed!(10)
 
 result = RAM_sample(p->logpdf(Normal(3.,2.), p[1]), [0.], 0.5, 100_000, show_progress=false)
 
