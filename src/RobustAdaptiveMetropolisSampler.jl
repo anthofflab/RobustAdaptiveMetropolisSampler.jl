@@ -62,6 +62,7 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractPDMat, 
         if α > rand()
             stats_accepted_values += 1
             x, y = y, x
+            log_probability_x = log_probability_y
         end
 
         # Step R3
