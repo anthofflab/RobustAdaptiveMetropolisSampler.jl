@@ -7,6 +7,6 @@ chain, accrate, S = RAM_sample(
     100_000                           # Number of runs
 )
 
-df = DataFrame(p1 = chain[:,1])
+df = DataFrame(p1=chain[:,1])
 
-df |> @vlplot(:bar, x={:p1, bin=true}, y="count()")
+df |> @vlplot(:bar, x = {:p1, bin = true}, y = "count()")

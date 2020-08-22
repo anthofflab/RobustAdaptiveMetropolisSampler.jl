@@ -23,7 +23,7 @@ end
 
 # Actual sampling code
 
-function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractPDMat, n::Int; opt_α=0.234, γ=2/3, q=Normal(), show_progress::Bool=true)
+function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractPDMat, n::Int; opt_α=0.234, γ=2 / 3, q=Normal(), show_progress::Bool=true)
     length(x0) == size(M0, 1) || error("Covariance matrix M0 must match size of x0.")
     n > 0 || error("n must be larger than 0.")
     0 < opt_α < 1 || error("opt_α must be between 0 and 1.")
@@ -71,7 +71,7 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractPDMat, 
         η = min(1, d * i^-γ)
 
         # Compute the new covariance matrix
-        M = s.L * (I + η * (α-opt_α) * (u * u') / norm(u)^2 ) * s.L'
+        M = s.L * (I + η * (α - opt_α) * (u * u') / norm(u)^2 ) * s.L'
 
         # The paper has a proof that M is symmetric, so we declare that fact
         # to work around numerical rounding errors
@@ -79,10 +79,10 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractPDMat, 
 
         output_chain[i, :] .= x
 
-        next!(progress_meter; showvalues = [(:acceptance_rate,stats_accepted_values/i)])
+        next!(progress_meter; showvalues=[(:acceptance_rate, stats_accepted_values / i)])
     end
 
-    return (chain=output_chain, acceptance_rate=stats_accepted_values/n, M=s.L * s.L')
+    return (chain = output_chain, acceptance_rate = stats_accepted_values / n, M = s.L * s.L')
 end
 
 end
