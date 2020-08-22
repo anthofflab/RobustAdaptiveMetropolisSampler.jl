@@ -1,8 +1,7 @@
 # RobustAdaptiveMetropolisSampler
 
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-[![Build Status](https://travis-ci.org/anthofflab/RobustAdaptiveMetropolisSampler.jl.svg?branch=master)](https://travis-ci.org/anthofflab/RobustAdaptiveMetropolisSampler.jl)
-[![Build status](https://ci.appveyor.com/api/projects/status/66r0lf8kcim6fm0o/branch/master?svg=true)](https://ci.appveyor.com/project/anthofflab/robustadaptivemetropolissampler-jl/branch/master)
+![](https://github.com/anthofflab/RobustAdaptiveMetropolisSampler.jl/workflows/Run%20tests/badge.svg)
 [![codecov](https://codecov.io/gh/anthofflab/RobustAdaptiveMetropolisSampler.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/anthofflab/RobustAdaptiveMetropolisSampler.jl)
 
 ## Overview
