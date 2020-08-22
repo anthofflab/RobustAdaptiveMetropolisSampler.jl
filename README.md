@@ -1,7 +1,7 @@
 # RobustAdaptiveMetropolisSampler
 
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-![](https://github.com/anthofflab/RobustAdaptiveMetropolisSampler.jl/workflows/Run%20tests/badge.svg)
+![](https://github.com/anthofflab/RobustAdaptiveMetropolisSampler.jl/workflows/Run%20CI%20on%20master/badge.svg)
 [![codecov](https://codecov.io/gh/anthofflab/RobustAdaptiveMetropolisSampler.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/anthofflab/RobustAdaptiveMetropolisSampler.jl)
 
 ## Overview
