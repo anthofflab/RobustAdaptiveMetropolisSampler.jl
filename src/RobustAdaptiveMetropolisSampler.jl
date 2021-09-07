@@ -55,9 +55,9 @@ function RAM_sample(
     # to ensure our function is type table. There is probably a better way to do this, but this
     # should work for now.
     log_probabilities_x = Vector{Float64}(undef, output_log_probability_x ? n : 0)
-
+    
     stats_accepted_values = 0
-
+    
     progress_meter = Progress(n, show_progress ? 0.1 : Inf)
 
     # This is a pre-allocated vector used in the loop
