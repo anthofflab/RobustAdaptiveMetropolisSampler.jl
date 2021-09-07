@@ -23,7 +23,18 @@ end
 
 # Actual sampling code
 
-function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractPDMat, n::Int; opt_α=0.234, γ=2 / 3, q=Normal(), show_progress::Bool=true)
+function RAM_sample(
+        logtarget,
+        x0::AbstractVector{<:Number},
+        M0::AbstractPDMat,
+        n::Int;
+        opt_α=0.234,
+        γ=2 / 3,
+        q=Normal(),
+        show_progress::Bool=true,
+        output_log_probability_x::Bool=false
+    )
+
     length(x0) == size(M0, 1) || error("Covariance matrix M0 must match size of x0.")
     n > 0 || error("n must be larger than 0.")
     0 < opt_α < 1 || error("opt_α must be between 0 and 1.")
@@ -40,6 +51,10 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractPDMat, 
     log_probability_x = logtarget(x0)
 
     output_chain = Matrix{Float64}(undef, n, d)
+    # we are using a hack here of allocating an empty vector if the output shouldn't be stored
+    # to ensure our function is type table. There is probably a better way to do this, but this
+    # should work for now.
+    log_probabilities_x = Vector{Float64}(undef, output_log_probability_x ? n : 0)
 
     stats_accepted_values = 0
 
@@ -51,7 +66,7 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractPDMat, 
     for i in 1:n
         # Step R1
         rand!(q, u)
-        
+
         y[:] .= x .+ mul!(scaled_proposal_vector, s.L, u)
 
         # Step R2
@@ -64,6 +79,8 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractPDMat, 
             x, y = y, x
             log_probability_x = log_probability_y
         end
+
+        output_log_probability_x && (log_probabilities_x[i] = log_probability_x)
 
         # Step R3
 
@@ -82,7 +99,12 @@ function RAM_sample(logtarget, x0::AbstractVector{<:Number}, M0::AbstractPDMat, 
         next!(progress_meter; showvalues=[(:acceptance_rate, stats_accepted_values / i)])
     end
 
-    return (chain = output_chain, acceptance_rate = stats_accepted_values / n, M = s.L * s.L')
+    return (
+        chain = output_chain,
+        acceptance_rate = stats_accepted_values / n,
+        M = s.L * s.L',
+        log_probabilities_x = output_log_probability_x ? log_probabilities_x : nothing
+    )
 end
 
 end

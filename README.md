@@ -27,11 +27,13 @@ RAM_sample(logtarget, x0, M0, n; opt_α=0.234, γ=2/3, q=Normal(), show_progress
 * `γ`: a parameter for the computation of the step size sequence.
 * `q`: the proposal distribution.
 * `show_progress`: a flag that controls whether a progress bar is shown.
+* `output_log_probability_x`: a flag that controls whether to include output for the log-posterior scores from each Markov chain iteration.
 
-The function returns a `NamedTuple` with three elements:
+The function returns a `NamedTuple` with three (or optionally four) elements:
 * `chain`: a `Matrix` with the result chain. Each row is one sample, the columns correspond to the dimensions of the problem.
 * `acceptance_rate`: the acceptance rate for the overall chain.
 * `M`: the last co-variance matrix used in the algorithm.
+* `log_probabilities_x`: the log-posterior score from each Markov chain iteration. Each element of `log_probabilities_x` corresponds to a row from `chain`.
 
 A simple example of using the function is
 
