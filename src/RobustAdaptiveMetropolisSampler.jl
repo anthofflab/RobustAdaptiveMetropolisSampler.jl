@@ -66,7 +66,7 @@ function RAM_sample(
     for i in 1:n
         # Step R1
         rand!(q, u)
-        
+
         y[:] .= x .+ mul!(scaled_proposal_vector, s.L, u)
 
         # Step R2
@@ -80,7 +80,7 @@ function RAM_sample(
             log_probability_x = log_probability_y
         end
 
-        output_log_probability_x && log_probabilities_x[i] = log_probability_x
+        output_log_probability_x && (log_probabilities_x[i] = log_probability_x)
 
         # Step R3
 
