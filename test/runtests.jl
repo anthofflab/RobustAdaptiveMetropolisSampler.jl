@@ -23,7 +23,7 @@ using Test
 
     result = RAM_sample(p -> logpdf(Normal(3., 2.), p[1]), [0.], Diagonal([0.5]), 1_000, show_progress=false, output_log_probability_x=false)
     @test length(result.chain) == 1_000
-s
+
     result = RAM_sample(p -> logpdf(Normal(3., 2.), p[1]), [0.], fill(0.5, 1, 1), 1_000, show_progress=false, output_log_probability_x=false)
     @test length(result.chain) == 1_000
 
