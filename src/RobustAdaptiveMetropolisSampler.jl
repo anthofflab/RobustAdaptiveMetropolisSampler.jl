@@ -32,6 +32,7 @@ function RAM_sample(
         γ=2 / 3,
         q=Normal(),
         show_progress::Bool=true,
+        nsampled::Int=0,
         output_log_probability_x::Bool=false
     )
 
@@ -85,7 +86,9 @@ function RAM_sample(
         # Step R3
 
         # This is taken from the second paragraph of section 5
-        η = min(1, d * i^-γ)
+        # A sequential application of RAM_Sample requires knowledge on the number of already
+        # processed steps.
+        η = min(1, d * (nsampled + i)^-γ)
 
         # Compute the new covariance matrix
         M = s.L * (I + η * (α - opt_α) * (u * u') / norm(u)^2 ) * s.L'
