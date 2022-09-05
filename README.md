@@ -27,6 +27,7 @@ RAM_sample(logtarget, x0, M0, n; opt_α=0.234, γ=2/3, q=Normal(), show_progress
 * `γ`: a parameter for the computation of the step size sequence.
 * `q`: the proposal distribution.
 * `show_progress`: a flag that controls whether a progress bar is shown.
+* `nsampled`: in sequential application of `RAM_sample`, provide the number of global steps so far to yield consistent updates on the covariance matrix.
 * `output_log_probability_x`: a flag that controls whether to include output for the log-posterior scores from each Markov chain iteration.
 
 The function returns a `NamedTuple` with three (or optionally four) elements:
